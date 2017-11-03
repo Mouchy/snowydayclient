@@ -28,7 +28,7 @@ php bin/console debug:router
 
 Fichiers modifiés
 *****************
-
+composer.json
 //web/app_dev.php
 //src/SD/AppserverloginBundle/Resources/views/Default/index.html.twig
 
@@ -142,6 +142,25 @@ Hello World!
     Hello World snowyday!
   </body>
 </html>
+
+Ajout GITHUB
+************
+
+Créer un nouveau repository sur GITHUB, noter le lien vers ce nouveau repository https://github.com/Mouchy/snowyday.git
+
+Puis initialiser git sur cloud9 pour pointer sur le repository github, dans une console cloud9 ::
+
+ git init
+ git remote add origin https://github.com/Mouchy/snowyday.git
+
+Voila pas besoin de plus il faut maintenant ajouter des fichiers dans notrerepository local puis les commiter en local ::
+
+ git add README.md
+ git commit -m "Test pour la mise en place de GIT"
+
+Ensuite on va synchroniser notre repository local avec celui de github ::
+
+ git push -u origin master
 
 FOSUserBundle
 *************
