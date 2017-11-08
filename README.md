@@ -30,8 +30,15 @@ Fichiers modifiés
 *****************
 composer.json
 //web/app_dev.php
-//src/SD/AppserverloginBundle/Resources/views/Default/index.html.twig
-
+//src/SD/AppclientloginBundle/Resources/views/Default/index.html.twig
+//app/AppKernel.php
+//app/config/config.yml
+//app/config/routing.yml
+//app/config/security.yml
+//app/config/services.yml
+//src/SD/AppclientloginBundle/Entity/User.php
+//src/SD/AppclientloginBundle/Model/UserRepository.php
+//src/SD/AppclientloginBundle/Security/UserManager.php
 
 CLOUD9-PHP7
 ***********
@@ -128,12 +135,12 @@ puis j'ai fait la commande ::
 
 
 
-Aprés ça le lien ci dessous pointe vers notre bundle et on perdu la barre du bas de deboguage.
+Aprés ça le lien ci dessous pointe vers notre bundle et on a perdu la barre du bas de deboguage.
 https://snowyday-man.c9users.io/web/app_dev.php 
 Symfony rajoute cette barre à chaque page contenant les balises .
 On va donc modifier le fichier ci-dessous pour la récupérer.
 
-{# src/SD/AppuserclientBundle/Resources/views/Default/index.html.twig #}
+{# src/SD/AppclientloginBundle/Resources/views/Default/index.html.twig #}
 Hello World!
 
 
@@ -192,7 +199,7 @@ Configuration ::
     #db_driver: orm # other valid values are 'mongodb' and 'couchdb'
     db_driver: custom
     firewall_name: main
-    user_class: SD\AppuserclientBundle\Entity\User
+    user_class: SD\AppclientloginBundle\Entity\User
     # si on utilise notre propre manager utilisateur ce que l'on fait en définissant le db_driver à custom il faut définir un user manager comme ci-dessous
     service: 
         user_manager: 'app.user_manager'
@@ -221,13 +228,13 @@ Security ::
 Service ::
 
   app.repository.user:
-        class: SD\AppuserclientBundle\Model\UserRepository
+        class: SD\AppclientloginBundle\Model\UserRepository
     #service_name:
     #    class: AppBundle\Directory\ClassName
     #    arguments: ['@another_service_name', 'plain_value', '%parameter_name%']
     # on utilise notre propre user manager car on a défini db_driver à custom
     app.user_manager:
-        class: SD\AppuserclientBundle\Security\UserManager
+        class: SD\AppclientloginBundle\Security\UserManager
         arguments: ['@fos_user.util.password_updater', 
                     '@fos_user.util.canonical_fields_updater', 
                     '@app.repository.user', 
@@ -235,7 +242,12 @@ Service ::
                     '@logger']
                     
                     
-                    
+Guzzlehttp
+**********
+
+Installation ::
+
+ php composer.phar require guzzlehttp/guzzle:~6.0
 
 
 FOS\UserBundle\Security\UserProvider
