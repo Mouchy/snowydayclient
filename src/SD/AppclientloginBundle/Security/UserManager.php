@@ -90,13 +90,9 @@ class UserManager extends BaseUserManager {
             }
             else if  ($key == 'id') {
                 $this->user->setId($value);
-                $id = $this->user->getId();
-                 $this->logger->info('setid');
-                $this->logger->info($id);
             }
             
-        }
-        
+        }        
         
         $this->user->setEnabled(true);
         
@@ -159,7 +155,6 @@ class UserManager extends BaseUserManager {
         //}
        
         foreach ($apiResponse as  $item) {
-			$this->logger->info("TEST2");
             foreach($item as $key => $value) {
                 if ($key == 'username') {
                     $this->user->setUsername($value);
@@ -183,8 +178,6 @@ class UserManager extends BaseUserManager {
                 else if  ($key == 'id') {
                     $this->user->setId($value);
                     $id = $this->user->getId();
-                     $this->logger->info('setid');
-                    $this->logger->info($id);
                 }
             }
         }

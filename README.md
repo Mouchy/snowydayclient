@@ -26,6 +26,8 @@ php bin/console doctrine:schema:update --force
 
 php bin/console debug:router
 
+
+
 Fichiers modifiés
 *****************
 composer.json
@@ -248,6 +250,11 @@ Guzzlehttp
 Installation ::
 
  php composer.phar require guzzlehttp/guzzle:~6.0
+
+
+
+Login
+http://www.snowydayclient.dev/web/app_dev.php/login
 
 
 FOS\UserBundle\Security\UserProvider
