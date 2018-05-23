@@ -9,11 +9,6 @@ use Psr\Log\LoggerInterface;
 use SD\AppclientloginBundle\Entity\User;
 use GuzzleHttp\Client  as GuzzleHttpClient;
 
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 class UserManager extends BaseUserManager {
     private $class;
@@ -23,9 +18,7 @@ class UserManager extends BaseUserManager {
      */
     private $userClass;
     
-    /**
-     * @var UserRepositoryInterface
-     */
+    
     private $userRepository;
  
     private $userManager;
@@ -59,9 +52,13 @@ class UserManager extends BaseUserManager {
     }
     
     public function findUserBy(array $criteria) {
+        
+        $this->logger->info("findUserBy");
+        echo 'UserManager::findUserBy';
+        
         $this->user = $this->createUser();
         $this->client = new GuzzleHttpClient();
-        $request = 'http://snowydayclient.dev/web/app_dev.php/users/';
+        $request = 'http://www.snowyday.dev/web/app_dev.php/users/';
         $request2 = $request.$criteria['id'];
         $response = $this->client->request('GET', $request2);
         $apiResponse = $response->getBody()->getContents();
@@ -100,7 +97,7 @@ class UserManager extends BaseUserManager {
     }
     
     public function findUserByUsername($username) {
-        	
+               
         //$this->$userManager = this->get('fos_user.user_manager');
         $this->user = $this->createUser();
         $this->client = new GuzzleHttpClient();
@@ -116,8 +113,13 @@ class UserManager extends BaseUserManager {
         //$contents = fread($handle, filesize($filename));
         //fclose($handle);
         
+        $this->logger->info("UserManager::findUserByUsername");
         
-        $response = $this->client->request('GET', 'http://snowydayclient.dev/web/app_dev.php/users');
+        $response = $this->client->request('GET', 'http://www.snowyday.dev/web/app_dev.php/users');
+        
+        $this->logger->info("UserManager::findUserByUsername2");
+        echo 'UserManager::findUserByUsername';
+        
         //$this->logger->info($response->getBody()->getContents());
          //$this->logger->info($response->getHeader('content-type'));
         $code = $response->getStatusCode();
@@ -126,7 +128,7 @@ class UserManager extends BaseUserManager {
 
         // Il faut plutot utiliser un deserializer mais pour l'instant j'ai une erreur de syntax si 
         // j'utlise la fonction decode ou deserialize (qui appel json_decode au final) pourtant avec 
-        // la fonction json_decode il ne semble pas y avoir de problÃ¨me
+        // la fonction json_decode il ne semble pas y avoir de problème
         //$serializer = new Serializer(array(new ObjectNormalizer()), array(new JsonEncoder()));
         //$result = $serializer->decode($response->getBody()->getContents(), 'json');
         //$items  = $serializer->denormalize($result);
@@ -186,15 +188,11 @@ class UserManager extends BaseUserManager {
        
         //$this->updateUser($this->user);
         
-        if (!$this->user instanceof UserInterface) {
-                throw new AuthenticationServiceException('The user provider must return a UserInterface object.');
-            }
-        
         return $this->user;
     }
     
     public function findUserByEmail($email) {
-         $this->logger->info("findUserByEmail");
+        $this->logger->info("findUserByEmail");
         echo 'UserManager::findUserByEmail';
          return $this->user;
     }
@@ -237,7 +235,23 @@ class UserManager extends BaseUserManager {
      */
     public function updateUser(UserInterface $user) {
         $this->logger->info("updateUser");
-        echo 'UserManager::updateUser';
+        
+        $username = $user->getusername();
+        $email    = $user->getEmail();
+        $password = $user->getPassword();
+                
+        $this->client = new GuzzleHttpClient();
+        
+        $this->client->post(
+            'http://www.snowyday.dev/web/app_dev.php/users',
+            array(
+                'customer' => array(
+                    'username' => $username,
+                    'email'    => $email,
+                    'password' => $password
+                )
+            )
+            );
          //$this->updateCanonicalFields($user);
          // api->update
 

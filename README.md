@@ -26,7 +26,10 @@ php bin/console doctrine:schema:update --force
 
 php bin/console debug:router
 
+You can find out what listeners are registered in the event dispatcher using the console. 
+To show all events and their listeners, run ::
 
+ php bin/console debug:event-dispatcher
 
 Fichiers modifiés
 *****************
@@ -229,8 +232,11 @@ Security ::
         
 Service ::
 
-  app.repository.user:
-        class: SD\AppclientloginBundle\Model\UserRepository
+ //app/config/services.yml
+    
+    app.repository.user:
+    class: SD\AppclientloginBundle\Model\UserRepository
+    
     #service_name:
     #    class: AppBundle\Directory\ClassName
     #    arguments: ['@another_service_name', 'plain_value', '%parameter_name%']
@@ -255,6 +261,32 @@ Installation ::
 
 Login
 http://www.snowydayclient.dev/web/app_dev.php/login
+
+Enregistrement
+http://www.snowydayclient.dev/web/app_dev.php/register/
+
+
+
+Login
+http://www.snowydayclient.dev/web/app_dev.php/login
+
+Lorsque l'on accéde a cette adresse on appelle le controller ci-dessous
+FOS\UserBundle\Controller\SecurityController\loginAction()
+
+Ensuite lorsque l'on valide le formulaire on appelle de nouveau le Security controller mais cette fois la méthode checkAction.
+C'est ici que je commence à étre perdu puisque checkAction ne fait rien donc je suppose que l'on repasse la main à symfony.
+<form action="{{ path("fos_user_security_check") }}" method="post">
+
+
+On arrive ensuite dans Symfony\Security\Core\Authentication\Provider\DaoAuthenticationProvider.php 
+dans la fonction retrieveUser() cette fonction appel la fonction loadUserByUsername du UserProvider de FOSuser.
+Le UserProvider a été défini dans le fichier security.yml de notre bundle avec la ligne. Cela correspond à un service défini dans
+FOS\UserBundle\Security\UserProvider avec l'id fos_user.user_provider.username.
+
+providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
 
 
 FOS\UserBundle\Security\UserProvider
