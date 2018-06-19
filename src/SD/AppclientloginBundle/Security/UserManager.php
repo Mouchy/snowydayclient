@@ -61,6 +61,7 @@ class UserManager extends BaseUserManager {
         $request = 'http://www.snowyday.dev/web/app_dev.php/users/';
         $request2 = $request.$criteria['id'];
         $response = $this->client->request('GET', $request2);
+        
         $apiResponse = $response->getBody()->getContents();
        
         $apiResponse = json_decode($apiResponse, true);
@@ -87,8 +88,7 @@ class UserManager extends BaseUserManager {
             }
             else if  ($key == 'id') {
                 $this->user->setId($value);
-            }
-            
+            }            
         }        
         
         $this->user->setEnabled(true);
@@ -111,15 +111,21 @@ class UserManager extends BaseUserManager {
         //$filename = "/home/ubuntu/workspace/test.txt";
         //$handle = fopen($filename, "r");
         //$contents = fread($handle, filesize($filename));
-        //fclose($handle);
+        //fclose($handle);       
         
+        //$response = $this->client->request('GET', 'http://www.snowyday.dev/web/app_dev.php/users');
+        
+        $request = 'http://www.snowyday.dev/web/app_dev.php/users/';
+        $userinfos =  $username;
+        $request3 = '/username';
+        
+        $request2 = $request.$userinfos.$request3;
         $this->logger->info("UserManager::findUserByUsername");
-        
-        $response = $this->client->request('GET', 'http://www.snowyday.dev/web/app_dev.php/users');
+        $response = $this->client->request('GET', $request2);
         
         $this->logger->info("UserManager::findUserByUsername2");
         echo 'UserManager::findUserByUsername';
-        
+        $this->logger->info($username);
         //$this->logger->info($response->getBody()->getContents());
          //$this->logger->info($response->getHeader('content-type'));
         $code = $response->getStatusCode();
@@ -156,31 +162,30 @@ class UserManager extends BaseUserManager {
         //        throw new UnexpectedValueException(json_last_error_msg());
         //}
        
-        foreach ($apiResponse as  $item) {
-            foreach($item as $key => $value) {
-                if ($key == 'username') {
-                    $this->user->setUsername($value);
-                }
-                else if ($key == 'usernameCanonical') {
-                    $this->user->setUsernameCanonical($value);
-                }
-                else if ($key == 'email') {
-                    $this->user->setEmail($value);
-                }
-                else if ($key == 'emailCanonical') {
-                    $this->user->setEmailCanonical($value);
-                }
-                else if ($key == 'password') {
-                    $this->user->setPassword($value);
-                    //$this->user->setPassword('ok');
-                }
-                 else if ($key == 'plainPassword') {
-                    $this->user->setPlainPassword('ok');
-                }
-                else if  ($key == 'id') {
-                    $this->user->setId($value);
-                    $id = $this->user->getId();
-                }
+        
+        foreach($apiResponse as $key => $value) {
+            if ($key == 'username') {
+                $this->user->setUsername($value);
+            }
+            else if ($key == 'usernameCanonical') {
+                $this->user->setUsernameCanonical($value);
+            }
+            else if ($key == 'email') {
+                $this->user->setEmail($value);
+            }
+            else if ($key == 'emailCanonical') {
+                $this->user->setEmailCanonical($value);
+            }
+            else if ($key == 'password') {
+                $this->user->setPassword($value);
+                //$this->user->setPassword('ok');
+            }
+             else if ($key == 'plainPassword') {
+                $this->user->setPlainPassword('ok');
+            }
+            else if  ($key == 'id') {
+                $this->user->setId($value);
+                $id = $this->user->getId();
             }
         }
         
