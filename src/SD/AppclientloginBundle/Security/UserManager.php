@@ -178,6 +178,7 @@ class UserManager extends BaseUserManager {
             }
             else if ($key == 'password') {
                 $this->user->setPassword($value);
+                $this->logger->info($value);
                 //$this->user->setPassword('ok');
             }
              else if ($key == 'plainPassword') {
@@ -239,23 +240,41 @@ class UserManager extends BaseUserManager {
      * @return void
      */
     public function updateUser(UserInterface $user) {
-        $this->logger->info("updateUser");
+        $this->logger->info("UserManager::updateUser");
         
         $username = $user->getusername();
+        $this->logger->info($username);
         $email    = $user->getEmail();
         $password = $user->getPassword();
-                
+        $plainpassword = $user->getPlainPassword();
+        $this->logger->info("UserManager::updateUser2");
         $this->client = new GuzzleHttpClient();
+        $this->logger->info("UserManager::updateUser3");
+        $this->logger->info($username);
+        $this->logger->info($email);
+        $this->logger->info("password");
+        $this->logger->info($password);
+        $this->logger->info("UserManager::updateUser4");
         
+        if (!$password) {
+            $encoder = $this->container->get('security.password_encoder');
+            $encoded = $encoder->encodePassword($user, $password);
+            $user->setPassword($encoded);
+            $this->logger->info("passwordencoded");
+            $this->logger->info($password);
+        }
+        /* L'option json permet de formater au format json */
+        /* L'option user indique le nom de la form utilisé au final qui pour   */
+        /* nous sur le serveur correspond à UserType si j'ai bien tout conpris */
         $this->client->post(
             'http://www.snowyday.dev/web/app_dev.php/users',
-            array(
-                'customer' => array(
+            ['json' => array(
+                  'user' => array(
                     'username' => $username,
                     'email'    => $email,
                     'password' => $password
                 )
-            )
+            )]
             );
          //$this->updateCanonicalFields($user);
          // api->update

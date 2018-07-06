@@ -262,13 +262,6 @@ Installation ::
 Login
 http://www.snowydayclient.dev/web/app_dev.php/login
 
-Enregistrement
-http://www.snowydayclient.dev/web/app_dev.php/register/
-
-
-
-Login
-http://www.snowydayclient.dev/web/app_dev.php/login
 
 Lorsque l'on accéde a cette adresse on appelle le controller ci-dessous
 FOS\UserBundle\Controller\SecurityController\loginAction()
@@ -280,16 +273,40 @@ C'est ici que je commence à étre perdu puisque checkAction ne fait rien donc j
 
 On arrive ensuite dans Symfony\Security\Core\Authentication\Provider\DaoAuthenticationProvider.php 
 dans la fonction retrieveUser() cette fonction appel la fonction loadUserByUsername du UserProvider de FOSuser.
-Le UserProvider a été défini dans le fichier security.yml de notre bundle avec la ligne. Cela correspond à un service défini dans
-FOS\UserBundle\Security\UserProvider avec l'id fos_user.user_provider.username.
+Le UserProvider a été défini dans le fichier security.yml de notre bundle avec la ligne ::
 
-providers:
+ providers:
         fos_userbundle:
             id: fos_user.user_provider.username
 
-
+Cela correspond à un service défini dans
+FOS\UserBundle\Security\UserProvider avec l'id fos_user.user_provider.username.
 
 FOS\UserBundle\Security\UserProvider
 
     loadUserByUsername
     refreshUser
+
+Au final     DaoAuthenticationProvider.php on utilise la fonction retrieveUser qui appel ::
+
+ $user = $this->userProvider->loadUserByUsername($username);
+ 
+cette fonction est definie dans notre cas dans vendor\friendofsymfony\user-bundle\Security\UserProvider.php.
+ Elle appel une fonction ::
+ 
+ $user = $this->findUser($username);
+ 
+Définit dans le même module fonction qui elle même appel ::
+
+  return $this->userManager->findUserByUsername($username);
+
+Définit dans notre classe UserManager
+
+
+Puis on appel la fonction refreshUser cette fonction est definie dans notre cas dans vendor\friendofsymfony\user-bundle\Security\UserProvider.php
+cette fonction appel la fonction findUserBy que l'on a aussi défini dans la classe UserManager.
+Par contre je ne sais pas trop qui appel la fonction refreshUser. 
+
+    
+Enregistrement
+http://www.snowydayclient.dev/web/app_dev.php/register/
