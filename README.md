@@ -310,3 +310,12 @@ Par contre je ne sais pas trop qui appel la fonction refreshUser.
     
 Enregistrement
 http://www.snowydayclient.dev/web/app_dev.php/register/
+
+
+
+Evenements symfony
+******************
+
+
+
+php bin/console debug:event-dispatcher
